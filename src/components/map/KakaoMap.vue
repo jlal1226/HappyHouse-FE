@@ -72,10 +72,14 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
     #map {
+        position: absolute;
+        left : 0px;
+        top : 0px;
         width : 100%;
         height : 700px;
+        z-index: -1;
     }
 </style>
 
