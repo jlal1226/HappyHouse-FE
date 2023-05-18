@@ -7,7 +7,6 @@
 <script>
 import TheHeaderVue from './components/TheHeader.vue'
 
-
 export default {
   name: "App",
   components: {

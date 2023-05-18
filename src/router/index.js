@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import BoardListView from '@/views/BoardListView.vue'
+import HouseDealView from '@/views/HouseDealView.vue'
 
 Vue.use(VueRouter)
 
@@ -15,6 +16,11 @@ const routes = [
     path: '/board',
     name: 'board',
     component: BoardListView
+  },
+  {
+    path: '/deal',
+    name : 'deal',
+    component : HouseDealView
   }
 ]
 
