@@ -8,7 +8,10 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state: {
       regions : [],
-      searched : []
+      searched : [],
+      dealList : [],
+      aptCode : String,
+      aptName : String
     },
     actions: {
       [Constant.ALL_REGION] : (store) => {
@@ -28,7 +31,17 @@ const store = new Vuex.Store({
           .then((response) => {
             store.commit(Constant.SEARCH_REGION, response.data);
           });
-      }
+      },
+      [Constant.SET_APT_CODE_NAME] : (store, payload) => {
+        store.commit(Constant.SET_APT_CODE_NAME, payload);
+      },
+      [Constant.SET_SIDEBAR] : (store, payload) => {
+        http.get("/deallist/" + payload)
+          .then((response) => {
+            store.commit(Constant.SET_SIDEBAR, response.data);
+            console.log(response.data);
+          });
+      } 
     },
     mutations: {
       [Constant.ALL_REGION] : (state, payload) => {
@@ -39,8 +52,15 @@ const store = new Vuex.Store({
       },
       [Constant.SEARCH_REGION] : (state, payload) => {
         state.searched = payload;
+      },
+      [Constant.SET_APT_CODE_NAME] : (state, payload) => {
+        state.aptCode = payload.aptCode;
+        state.aptName = payload.title;
+      },
+      [Constant.SET_SIDEBAR] : (state, payload) => {
+        state.dealList = payload;
+        console.log(store.deallist);
       }
-
     }
 });
 

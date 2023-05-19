@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import Constant from '@/util/Constant';
+
 export default {
     name : 'KakaoMap',
     data() {
@@ -50,9 +52,11 @@ export default {
             this.searched.forEach((elem) => {
                 let latlng = new kakao.maps.LatLng(elem.lat, elem.lng);
                 let title = elem.apartmentName;
+                let aptCode = elem.aptCode;
                 this.positions.push({
                     latlng,
-                    title
+                    title,
+                    aptCode
                 })
             });
             this.loadMaker();
@@ -64,7 +68,11 @@ export default {
                 const marker = new kakao.maps.Marker({
                     map: this.map,
                     position: position.latlng, 
-                    title: position.title, 
+                    title: position.title,
+                });
+                
+                kakao.maps.event.addListener(marker, 'click', () => {
+                    this.showDetail(position.aptCode, position.title);
                 });
                 this.markers.push(marker);
             });
@@ -84,6 +92,9 @@ export default {
                 });
             }
         },
+        showDetail(aptCode, title){
+            this.$store.dispatch(Constant.SET_APT_CODE_NAME, {aptCode, title}); 
+        }
     },
 
 
