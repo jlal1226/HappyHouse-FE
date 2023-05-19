@@ -8,6 +8,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state: {
       regions : [],
+      searched : []
     },
     actions: {
       [Constant.ALL_REGION] : (store) => {
@@ -15,12 +16,31 @@ const store = new Vuex.Store({
             .then((response) => {
               store.commit(Constant.ALL_REGION, response.data)
             });
+      },
+      [Constant.SEARCH_KEYWORD] : (store, keyword) => {
+        http.get("/list/" + keyword)
+          .then((response) => {
+            store.commit(Constant.SEARCH_KEYWORD, response.data);
+          });
+      },
+      [Constant.SEARCH_REGION] : (store, payload) => {
+        http.post("/search/", payload)
+          .then((response) => {
+            store.commit(Constant.SEARCH_REGION, response.data);
+          });
       }
     },
     mutations: {
       [Constant.ALL_REGION] : (state, payload) => {
         state.regions = payload;
+      },
+      [Constant.SEARCH_KEYWORD] : (state, payload) => {
+        state.searched = payload;
+      },
+      [Constant.SEARCH_REGION] : (state, payload) => {
+        state.searched = payload;
       }
+
     }
 });
 

@@ -14,6 +14,14 @@ export default {
             markers : [],
         };
     },
+    computed : {
+        searched(){
+            return this.$store.state.searched;
+        }
+    },
+    watch :{
+        'searched' : 'mark' 
+    },
     created() {},
     mounted() {
         if (window.kakao && window.kakao.maps) this.loadMap();
@@ -37,9 +45,19 @@ export default {
 
             this.map = new window.kakao.maps.Map(container, options);
         },
-        
+        mark(){
+            this.positions = [];
+            this.searched.forEach((elem) => {
+                let latlng = new kakao.maps.LatLng(elem.lat, elem.lng);
+                let title = elem.apartmentName;
+                this.positions.push({
+                    latlng,
+                    title
+                })
+            });
+            this.loadMaker();
+        },
         loadMaker() {
-            
             this.deleteMarker();
             this.markers = [];
             this.positions.forEach((position) => {
@@ -78,7 +96,7 @@ export default {
         left : 0px;
         top : 0px;
         width : 100%;
-        height : 700px;
+        height : 100%;
         z-index: -1;
     }
 </style>

@@ -1,9 +1,8 @@
 <template>
     <div id = "searchbar">
-        <b-card style="max-width: 20rem;">
             <b-button-group>
-                <b-button size = "lg" variant="primary" @click="disableKeywordSearch">동 검색</b-button>
-                <b-button size = "lg" variant="primary" @click="enableKeywordSearch">키워드 검색</b-button>
+                <b-button size = "sg" variant="primary" @click="disableKeywordSearch">동 검색</b-button>
+                <b-button size = "sg" variant="primary" @click="enableKeywordSearch">키워드 검색</b-button>
             </b-button-group>
             <b-form v-if="`${this.mode}` === 'searchRegion'" inline>
                     <b-form-input list="sidoname" placeholder="시/도명" v-model="sido" @change="getGugunList" autocomplete="on"></b-form-input>
@@ -20,9 +19,9 @@
                     </datalist>
             </b-form>
             <b-form v-else>
-                <b-form-input v-moduel="keyword" placeholder="키워드 검색"> </b-form-input>
+                <b-form-input v-model="keyword" placeholder="키워드 검색"> </b-form-input>
             </b-form>
-        </b-card>
+            <b-button size = "sg" variant="primary" @click="search">검색</b-button>
     </div>
 </template>
 
@@ -91,16 +90,30 @@ export default {
                     if (!this.dongs.includes(elem.dongName)) this.dongs.push(elem.dongName);
                 });
             }
+        },
+        search(){
+            if (this.mode === "searchRegion"){
+                console.log(this.sido);
+                this.$store.dispatch(Constant.SEARCH_REGION, {sidoName: this.sido, gugunName: this.gugun, dongName: this.dong});
+            }
+            else {
+                this.$store.dispatch(Constant.SEARCH_KEYWORD, this.keyword);
+            }
         }
     }
 }
 </script>
 
 <style scoped>
-#searchBar{
-    position: absolute;
-    top : 50rem;
-    
 
+#searchbar{
+    max-width: 20rem;
+    background-color: white;
+    top : 5rem;
+    left : 5rem;
+    height : 15rem;
+    width : 20rem;
+    opacity: 80%;
+    border : 1px black;
 }
 </style>
