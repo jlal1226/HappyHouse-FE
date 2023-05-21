@@ -6,7 +6,8 @@ export default {
     SET_SIDEBAR: "setSidebar",
     INSERT_INTEREST: "insertInterest",
     DELETE_INTEREST: "deleteInterest",
-    GET_INTERESTS: "getInterests"
+    GET_INTERESTS: "getInterests",
+    GET_INTEREST_LIST : "getInterest"
 
 
 

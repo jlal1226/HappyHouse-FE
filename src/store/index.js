@@ -12,7 +12,8 @@ const store = new Vuex.Store({
       dealList : [],
       aptCode : String,
       aptName : String,
-      interests : []
+      interests : [],
+      interestList : [],
     },
     actions: {
       [Constant.ALL_REGION] : (store) => {
@@ -63,13 +64,17 @@ const store = new Vuex.Store({
           })
       },
       [Constant.GET_INTERESTS] : (store) => {
-        http.get("/interest/show")
+        http.get("/interest/getInterests")
           .then((response) => {
             store.commit(Constant.GET_INTERESTS, response.data);
           })
+      },
+      [Constant.GET_INTEREST_LIST] : (store) => {
+        http.get("/interest/list")
+          .then((response) => {
+            store.commit(Constant.GET_INTEREST_LIST, response.data);
+          })
       }
-
-
     },
     mutations: {
       [Constant.ALL_REGION] : (state, payload) => {
@@ -90,7 +95,12 @@ const store = new Vuex.Store({
         console.log(store.deallist);
       },
       [Constant.GET_INTERESTS] : (state, payload) => {
+        console.log(payload);
         state.interests = payload;
+      },
+      [Constant.GET_INTEREST_LIST] : (state, payload) => {
+        console.log(payload);
+        state.interestList = payload;
       }
     }
 });

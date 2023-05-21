@@ -54,10 +54,10 @@ export default {
             let cnt = 0;
             console.log("interest", this.interests);
             this.interests.forEach(elem => {
+                console.log(elem.aptCode, this.aptCode);
                 if (elem.aptCode === this.aptCode) cnt++;
             });
-            if (cnt > 0) return true;
-            return false;
+            return (cnt > 0);
         }
     },
     watch : {

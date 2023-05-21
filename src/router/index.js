@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import BoardListView from '@/views/BoardListView.vue'
 import HouseDealView from '@/views/HouseDealView.vue'
+import InterestView from '@/views/InterestView.vue'
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,13 @@ const routes = [
     path: '/deal',
     name : 'deal',
     component : HouseDealView
+  },
+  {
+    path : '/interest',
+    name : 'interest',
+    component : InterestView
+
+
   }
 ]
 
