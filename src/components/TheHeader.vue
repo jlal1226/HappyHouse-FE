@@ -11,7 +11,9 @@
           <b-navbar-nav>
             <b-nav-item :to="{name : 'deal'}">실거래</b-nav-item>
             <b-nav-item href="#">매물</b-nav-item>
+            <b-nav-item :to = "{name : 'interest'}"> 관심물건 </b-nav-item>
             <b-nav-item :to="{ name: 'board' }"> 게시판 </b-nav-item>
+            <b-nav-item @click="tempLogin"> 임시로그인</b-nav-item>
           </b-navbar-nav>
           <b-nav-item-dropdown left>
             <!-- Using 'button-content' slot -->
@@ -26,3 +28,15 @@
     </b-navbar>
   </div>
 </template>
+
+<script>
+import Constant from "@/util/Constant";
+export default ({
+
+  methods : {
+    tempLogin(){
+      this.$store.dispatch(Constant.TEMP_LOGIN);
+    }
+  }
+})
+</script>

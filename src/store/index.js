@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import http from '@/axios/axios-common.js'
 import Constant from '@/util/Constant'
-//모든 컴포넌트에서 Vuex를 사용할 수 있게 설정.
+
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -11,7 +11,8 @@ const store = new Vuex.Store({
       searched : [],
       dealList : [],
       aptCode : String,
-      aptName : String
+      aptName : String,
+      interests : []
     },
     actions: {
       [Constant.ALL_REGION] : (store) => {
@@ -41,7 +42,34 @@ const store = new Vuex.Store({
             store.commit(Constant.SET_SIDEBAR, response.data);
             console.log(response.data);
           });
-      } 
+      },
+      [Constant.INSERT_INTEREST] : (store, payload) => {
+        http.post("/interest/insert", payload) 
+          .then((response) => {
+            console.log(response.data);
+            if (response.data == 1) alert("관심 목록에 추가했습니다.");
+            else alert("관심 목록에 추가하지 못했습니다.");
+            store.dispatch(Constant.GET_INTERESTS);
+          })
+
+      },
+      [Constant.DELETE_INTEREST] : (store, payload) => {
+        http.delete("/interest/delete/" + payload) 
+        .then((response) => {
+            console.log(response.data);
+            if (response.data == 1) alert("관심 목록에서 삭제했습니다.");
+            else alert("관심 목록에서 삭제하지 못했습니다.");
+            store.dispatch(Constant.GET_INTERESTS);
+          })
+      },
+      [Constant.GET_INTERESTS] : (store) => {
+        http.get("/interest/show")
+          .then((response) => {
+            store.commit(Constant.GET_INTERESTS, response.data);
+          })
+      }
+
+
     },
     mutations: {
       [Constant.ALL_REGION] : (state, payload) => {
@@ -60,6 +88,9 @@ const store = new Vuex.Store({
       [Constant.SET_SIDEBAR] : (state, payload) => {
         state.dealList = payload;
         console.log(store.deallist);
+      },
+      [Constant.GET_INTERESTS] : (state, payload) => {
+        state.interests = payload;
       }
     }
 });
