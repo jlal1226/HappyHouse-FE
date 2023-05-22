@@ -1,10 +1,13 @@
 <template>
     <div>
-    <b-table hover :items="items" :fields="fields"> 
+    <b-table sticky-header="true" hover striped :items="items" :fields="fields"> 
+        <template #cell(title)="data">
+            <router-link to="#"> {{ data.item.title }} </router-link> 
+        </template>
     </b-table>
-    <button @click="moveleft"> (왼쪽) </button>
+    <button @click="moveleft"> (왼쪽) </button> <!-- 맨앞/이전페이지, 다음페이지/맨뒤-->
         <span v-for="index in totalpg" :key ="index">
-            {{ index }}
+            <router-link to="#"> {{ index }} </router-link>
         </span>
     <button @click="moveright"> (오른쪽) </button>
     </div>
@@ -22,7 +25,7 @@ export default {
             items : [],
             fields : [
                 { key: "articleno", label: "글번호", tdClass: "tdClass" },
-                { key: "subject", label: "제목", tdClass: "tdSubject" },
+                { key: "title", label: "제목", tdClass: "tdSubject" },
                 { key: "userid", label: "작성자", tdClass: "tdClass" },
                 { key: "regtime", label: "작성일", tdClass: "tdClass" },
                 { key: "hit", label: "조회수", tdClass: "tdClass" },
@@ -50,6 +53,7 @@ export default {
                 regtime : "0000-00-00",
                 content : "하이"
             }
+            
         ]
     },
     methods : {
