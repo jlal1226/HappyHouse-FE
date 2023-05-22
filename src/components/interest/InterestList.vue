@@ -18,48 +18,59 @@
                 </template>
             </template>
         </b-table>
-        <interest-detail aptCode="{aptCode}">
-        </interest-detail>
+        <search-table :aptCode="aptCode"> </search-table>
     </div>
 </template>
 
 <script>
-import Constant from '@/util/Constant';
-import InterestDetail from './InterestDetail.vue';
+import SearchTable from "../map/SearchTable.vue";
+import Constant from "@/util/Constant";
 
 export default {
     components : {
-        InterestDetail
+        SearchTable
     },
     data(){
         return {
             fields : [
-                'aptName', 'aptCode', 'avgDealAmount', 'address', 'avgarea'
+                {
+                    key: 'aptName',
+                    label : '아파트 명'
+                },
+                {
+                    key: 'avgDealAmount',
+                    label : '평균 거래가'
+                },
+                {
+                    key: 'address',
+                    label : '주소'
+                },
+                {
+                    key: 'avgArea',
+                    label : '평균 면적'
+                }
             ],
-            selected : [] 
+            selected: [],
+            aptCode : String
         }
     },
-    created(){
-        this.$store.dispatch(Constant.GET_INTEREST_LIST);
+    created() {
+        this.aptCode = "";
+        this.$store.dispatch(Constant.REMOVE_DEALLIST);
     },
     computed :{
         interestList() {
             return this.$store.state.interestList;
         },
-        aptCode() {
-            if (this.selected.length > 0) {
-                return this.selected[0].aptCode;
-            }
-            return null;
-        }
-
     },
     methods : {
         selectApt(items){
             if (items.length > 0) {
-                this.selected = items; 
-                //this.$store.dispatch(Constant.SELECT_INTEREST_DETAIL, this.aptCode);
+                this.selected = items;
+                this.aptCode = this.selected[0].aptCode;
+                this.$store.dispatch(Constant.GET_DEALLIST, this.aptCode);
             }
+            else this.aptCode = "";
         }
     }
 
@@ -69,7 +80,9 @@ export default {
 <style>
 #interestsList {
     max-width: 50%;
-
+}
+search-table {
+    right : 0;
 
 
 }

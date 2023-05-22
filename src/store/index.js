@@ -17,19 +17,19 @@ const store = new Vuex.Store({
     },
     actions: {
       [Constant.ALL_REGION] : (store) => {
-        http.get("/allregion")
+        http.get("/deal/allregion")
             .then((response) => {
               store.commit(Constant.ALL_REGION, response.data)
             });
       },
       [Constant.SEARCH_KEYWORD] : (store, keyword) => {
-        http.get("/list/" + keyword)
+        http.get("/deal/list/" + keyword)
           .then((response) => {
             store.commit(Constant.SEARCH_KEYWORD, response.data);
           });
       },
       [Constant.SEARCH_REGION] : (store, payload) => {
-        http.post("/search/", payload)
+        http.post("/deal/search/", payload)
           .then((response) => {
             store.commit(Constant.SEARCH_REGION, response.data);
           });
@@ -37,12 +37,14 @@ const store = new Vuex.Store({
       [Constant.SET_APT_CODE_NAME] : (store, payload) => {
         store.commit(Constant.SET_APT_CODE_NAME, payload);
       },
-      [Constant.SET_SIDEBAR] : (store, payload) => {
-        http.get("/deallist/" + payload)
+      [Constant.GET_DEALLIST] : (store, payload) => {
+        http.get("/deal/deallist/" + payload)
           .then((response) => {
-            store.commit(Constant.SET_SIDEBAR, response.data);
-            console.log(response.data);
+            store.commit(Constant.GET_DEALLIST, response.data);
           });
+      },
+      [Constant.REMOVE_DEALLIST]: (store) => {
+        store.commit(Constant.REMOVE_DEALLIST);        
       },
       [Constant.INSERT_INTEREST] : (store, payload) => {
         http.post("/interest/insert", payload) 
@@ -90,16 +92,16 @@ const store = new Vuex.Store({
         state.aptCode = payload.aptCode;
         state.aptName = payload.title;
       },
-      [Constant.SET_SIDEBAR] : (state, payload) => {
+      [Constant.GET_DEALLIST] : (state, payload) => {
         state.dealList = payload;
-        console.log(store.deallist);
+      },
+      [Constant.REMOVE_DEALLIST]: (state) => {
+        state.dealList = [];
       },
       [Constant.GET_INTERESTS] : (state, payload) => {
-        console.log(payload);
         state.interests = payload;
       },
       [Constant.GET_INTEREST_LIST] : (state, payload) => {
-        console.log(payload);
         state.interestList = payload;
       }
     }
