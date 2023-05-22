@@ -27,8 +27,18 @@ const routes = [
     path : '/interest',
     name : 'interest',
     component : InterestView
-
-
+  },
+  {
+    path: "/user",
+    name: "user",
+    component: () => import("@/views/AppUser"),
+    children: [
+      {
+        path: "login",
+        name: "login",
+        component: () => import("@/components/user/UserLogin")
+      }
+    ]
   }
 ]
 

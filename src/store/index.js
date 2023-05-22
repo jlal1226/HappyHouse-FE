@@ -3,9 +3,14 @@ import Vuex from 'vuex'
 import http from '@/axios/axios-common.js'
 import Constant from '@/util/Constant'
 
+import memberStore from "@/store/modules/memberStore"
+
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
+  modules: {
+      memberStore
+    },
     state: {
       regions : [],
       searched : [],
