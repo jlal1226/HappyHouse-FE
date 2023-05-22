@@ -1,18 +1,18 @@
 <template>
   <div>
-    <b-navbar toggleable="lg" type="dark" variant="success" sticky="true">
-      <b-navbar-brand :to="{name: 'home'}">VaBang</b-navbar-brand>
+    <b-navbar toggleable="lg" type="dark" variant="success">
+      <b-navbar-brand :to="{ name: 'home' }">VaBang</b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
       <b-collapse id="nav-collapse" is-nav>
+        <b-navbar-nav>
+          <b-nav-item href="#">실거래</b-nav-item>
+          <b-nav-item href="#">매물</b-nav-item>
+          <b-nav-item :to="{ name: 'board' }"> 게시판 </b-nav-item>
+        </b-navbar-nav>
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
-          <b-navbar-nav>
-            <b-nav-item href="#">실거래</b-nav-item>
-            <b-nav-item href="#">매물</b-nav-item>
-            <b-nav-item :to="{ name: 'board' }"> 게시판 </b-nav-item>
-          </b-navbar-nav>
           <b-nav-item-dropdown left>
             <!-- Using 'button-content' slot -->
             <template #button-content>
