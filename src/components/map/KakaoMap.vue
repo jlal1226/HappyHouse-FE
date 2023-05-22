@@ -24,10 +24,12 @@ export default {
     watch :{
         'searched' : 'mark' 
     },
-    created() {},
+    created() {
+    },
     mounted() {
         if (window.kakao && window.kakao.maps) this.loadMap();
         else this.loadScript();
+        this.mark(); 
     },
     methods: {
         loadScript() {
@@ -47,8 +49,9 @@ export default {
 
             this.map = new window.kakao.maps.Map(container, options);
         },
-        mark(){
+        mark() {
             this.positions = [];
+            if (this.searched.length === 0) return;
             this.searched.forEach((elem) => {
                 let latlng = new kakao.maps.LatLng(elem.lat, elem.lng);
                 let title = elem.apartmentName;
@@ -104,10 +107,8 @@ export default {
 <style scoped>
     #map {
         position: absolute;
-        left : 0px;
-        top : 0px;
         width : 100%;
-        height : 100%;
+        height : 900px;
         z-index: -1;
     }
 </style>

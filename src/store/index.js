@@ -22,16 +22,10 @@ const store = new Vuex.Store({
               store.commit(Constant.ALL_REGION, response.data)
             });
       },
-      [Constant.SEARCH_KEYWORD] : (store, keyword) => {
-        http.get("/deal/list/" + keyword)
-          .then((response) => {
-            store.commit(Constant.SEARCH_KEYWORD, response.data);
-          });
-      },
-      [Constant.SEARCH_REGION] : (store, payload) => {
+      [Constant.SEARCH_KEYWORD] : (store, payload) => {
         http.post("/deal/search/", payload)
           .then((response) => {
-            store.commit(Constant.SEARCH_REGION, response.data);
+            store.commit(Constant.SEARCH_KEYWORD, response.data);
           });
       },
       [Constant.SET_APT_CODE_NAME] : (store, payload) => {
@@ -83,9 +77,6 @@ const store = new Vuex.Store({
         state.regions = payload;
       },
       [Constant.SEARCH_KEYWORD] : (state, payload) => {
-        state.searched = payload;
-      },
-      [Constant.SEARCH_REGION] : (state, payload) => {
         state.searched = payload;
       },
       [Constant.SET_APT_CODE_NAME] : (state, payload) => {
