@@ -1,10 +1,6 @@
 <template>
-    <div id = "searchbar">
-            <b-button-group>
-                <b-button size = "sg" variant="primary" @click="disableKeywordSearch">동 검색</b-button>
-                <b-button size = "sg" variant="primary" @click="enableKeywordSearch">키워드 검색</b-button>
-            </b-button-group>
-            <b-form v-if="`${this.mode}` === 'searchRegion'" inline>
+    <div id = "searchbar" >
+            <b-form inline @submit.prevent>
                     <b-form-input list="sidoname" placeholder="시/도명" v-model="sido" @change="getGugunList" autocomplete="on"></b-form-input>
                     <datalist id = "sidoname">
                         <option v-for="sidoopt in sidos" :key ="sidoopt"> {{ sidoopt }}</option>
@@ -17,9 +13,7 @@
                     <datalist id = "dongname">
                         <option v-for="dongopt in dongs" :key ="dongopt"> {{ dongopt }}</option>
                     </datalist>
-            </b-form>
-            <b-form v-else>
-                <b-form-input v-model="keyword" placeholder="키워드 검색"> </b-form-input>
+                    <b-form-input placeholder="키워드 검색" v-model="keyword"></b-form-input>
             </b-form>
             <b-button size = "sg" variant="primary" @click="search">검색</b-button>
     </div>
@@ -42,7 +36,6 @@ export default {
         }
     },
     created(){
-        this.mode = "searchRegion";
         this.sido = "";
         this.gugun = "";
         this.dong = "";
@@ -55,12 +48,6 @@ export default {
         }
     },
     methods : {
-        disableKeywordSearch() {
-            this.mode = "searchRegion";
-        },
-        enableKeywordSearch() {
-            this.mode = "searchKeyword";
-        },
         getRegions() {
             this.$store.dispatch(Constant.ALL_REGION);
             this.regions.forEach((element) => {
@@ -74,7 +61,7 @@ export default {
             if (this.sido === "") this.guguns = [];
             else {
                 this.guguns = [];
-                let tmp = this.regions.filter(region => region.sidoName === this.sido);
+                let tmp = this.regions.filter(region => region.sidoName.includes(this.sido));
                 tmp.forEach((elem) => {
                     if (!this.guguns.includes(elem.gugunName)) this.guguns.push(elem.gugunName);
                 });
@@ -82,23 +69,17 @@ export default {
         },
         getDongList(){
             this.dong = "";
-            if (this.gugun === "") this.dongs= [];
+            if (this.gugun === "") this.dongs = [];
             else {
                 this.dongs= [];
-                let tmp = this.regions.filter(region => (region.sidoName === this.sido && region.gugunName === this.gugun));
+                let tmp = this.regions.filter(region => (region.sidoName.includes(this.sido) && (region.gugunName.includes(this.gugun))));
                 tmp.forEach((elem) => {
                     if (!this.dongs.includes(elem.dongName)) this.dongs.push(elem.dongName);
                 });
             }
         },
         search(){
-            if (this.mode === "searchRegion"){
-                console.log(this.sido);
-                this.$store.dispatch(Constant.SEARCH_REGION, {sidoName: this.sido, gugunName: this.gugun, dongName: this.dong});
-            }
-            else {
-                this.$store.dispatch(Constant.SEARCH_KEYWORD, this.keyword);
-            }
+            this.$store.dispatch(Constant.SEARCH_KEYWORD, { sidoName: this.sido, gugunName: this.gugun, dongName: this.dong, keyword : this.keyword});
         }
     }
 }
@@ -109,11 +90,12 @@ export default {
 #searchbar{
     max-width: 20rem;
     background-color: white;
-    top : 5rem;
-    left : 5rem;
+    top : 1rem;
+    left : 1rem;
     height : 15rem;
     width : 20rem;
     opacity: 80%;
     border : 1px black;
+    position: absolute;
 }
 </style>

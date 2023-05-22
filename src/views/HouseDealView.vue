@@ -1,7 +1,7 @@
 <template>
-    <div>
-        <search-bar></search-bar>
+    <div id="housedealview">
         <kakao-map></kakao-map>
+        <search-bar></search-bar>
         <search-side-bar></search-side-bar>
     </div>
 </template>
@@ -22,5 +22,7 @@ name: "HouseDealView",
 </script>
 
 <style>
-
+#housedealview{
+    position : relative;
+}
 </style>
