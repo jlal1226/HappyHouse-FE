@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import Constant from '@/util/Constant';
+
 export default {
     name : 'KakaoMap',
     data() {
@@ -13,6 +15,14 @@ export default {
             positions: [],
             markers : [],
         };
+    },
+    computed : {
+        searched(){
+            return this.$store.state.searched;
+        }
+    },
+    watch :{
+        'searched' : 'mark' 
     },
     created() {},
     mounted() {
@@ -37,16 +47,32 @@ export default {
 
             this.map = new window.kakao.maps.Map(container, options);
         },
-        
+        mark(){
+            this.positions = [];
+            this.searched.forEach((elem) => {
+                let latlng = new kakao.maps.LatLng(elem.lat, elem.lng);
+                let title = elem.apartmentName;
+                let aptCode = elem.aptCode;
+                this.positions.push({
+                    latlng,
+                    title,
+                    aptCode
+                })
+            });
+            this.loadMaker();
+        },
         loadMaker() {
-            
             this.deleteMarker();
             this.markers = [];
             this.positions.forEach((position) => {
                 const marker = new kakao.maps.Marker({
                     map: this.map,
                     position: position.latlng, 
-                    title: position.title, 
+                    title: position.title,
+                });
+                
+                kakao.maps.event.addListener(marker, 'click', () => {
+                    this.showDetail(position.aptCode, position.title);
                 });
                 this.markers.push(marker);
             });
@@ -66,16 +92,23 @@ export default {
                 });
             }
         },
+        showDetail(aptCode, title){
+            this.$store.dispatch(Constant.SET_APT_CODE_NAME, {aptCode, title}); 
+        }
     },
 
 
 }
 </script>
 
-<style>
+<style scoped>
     #map {
+        position: absolute;
+        left : 0px;
+        top : 0px;
         width : 100%;
-        height : 700px;
+        height : 100%;
+        z-index: -1;
     }
 </style>
 
