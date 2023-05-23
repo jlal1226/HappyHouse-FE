@@ -1,21 +1,16 @@
 <template>
-    <div id = "searchbar" >
-            <b-form inline @submit.prevent>
-                    <b-form-input list="sidoname" placeholder="시/도명" v-model="sido" @change="getGugunList" autocomplete="on"></b-form-input>
-                    <datalist id = "sidoname">
-                        <option v-for="sidoopt in sidos" :key ="sidoopt"> {{ sidoopt }}</option>
-                    </datalist>
-                    <b-form-input list="gugunname" placeholder="구/군명" v-model="gugun" @change="getDongList"></b-form-input>
-                    <datalist id = "gugunname">
-                        <option v-for="gugunopt in guguns" :key ="gugunopt"> {{ gugunopt }}</option>
-                    </datalist>
-                    <b-form-input list="dongname" placeholder="동명" v-model="dong"></b-form-input>
-                    <datalist id = "dongname">
-                        <option v-for="dongopt in dongs" :key ="dongopt"> {{ dongopt }}</option>
-                    </datalist>
-                    <b-form-input placeholder="키워드 검색" v-model="keyword"></b-form-input>
+    <div id="searchbar">
+            <b-form inline @submit.prevent @keypress="() =>keyevent(this)">
+                <b-input-group>
+                    <b-form-input class="input_field" placeholder="키워드" v-model="keyword" id="keyword"></b-form-input>
+                    <b-input-group-append>
+                        <b-button variant="outline-success" @click="search" style="height:27px">검색</b-button>
+                    </b-input-group-append>
+                </b-input-group>
+                <b-form-select :options="sidos" placeholder="시/도명" list="sidoname" v-model="sido" @change="getGugunList" autocomplete="on" id="sido"></b-form-select>
+                <b-form-select :options="guguns" placeholder="구/군명" list="gugunname" v-model="gugun" @change="getDongList" id ="gugun"></b-form-select>
+                <b-form-select :options="dongs" placeholder="동명" list="dongname" v-model="dong" id="dong"></b-form-select>
             </b-form>
-            <b-button size = "sg" variant="primary" @click="search">검색</b-button>
     </div>
 </template>
 
@@ -80,7 +75,19 @@ export default {
         },
         search(){
             this.$store.dispatch(Constant.SEARCH_KEYWORD, { sidoName: this.sido, gugunName: this.gugun, dongName: this.dong, keyword : this.keyword});
+            //만약 검색 결과가 없으면 -> 해당 지역에서 찾기
+        },
+        keyevent() {
+            let keycode = event.keyCode;
+            if (keycode === 13) this.search();
+        },
+        resetForm(){
+            this.sido = "";
+            this.gugun= "";
+            this.dong= "";
+            this.keyword= "";
         }
+
     }
 }
 </script>
@@ -88,14 +95,21 @@ export default {
 <style scoped>
 
 #searchbar{
-    max-width: 20rem;
-    background-color: white;
-    top : 1rem;
-    left : 1rem;
-    height : 15rem;
-    width : 20rem;
-    opacity: 80%;
-    border : 1px black;
     position: absolute;
+    background-color: white;
+    top : 20px;
+    left : 20px;
+    height : 300px;
+    width : 300px;
+    border-radius: 0 0 3% 3%;
+    opacity : 100%;
+    padding: 10px;
 }
+
+#keyword{
+    height : 27px;
+    width : 80%;
+    font-size : 13px;
+}
+
 </style>
