@@ -1,4 +1,5 @@
 import { apiInstance } from "./index.js";
+import http from "@/axios/axios-common.js";
 
 const api = apiInstance();
 
@@ -9,6 +10,8 @@ async function login(user, success, fail) {
 
 async function findById(userid, success, fail) {
   api.defaults.headers["access-token"] = sessionStorage.getItem("access-token");
+  http.defaults.headers["access-token"] = sessionStorage.getItem("access-token");
+  
   await api.get(`/user/info/${userid}`).then(success).catch(fail);
 }
 
