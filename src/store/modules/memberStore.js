@@ -38,7 +38,7 @@ const memberStore = {
       await login(
         user,
         ({ data }) => {
-          console.log(data);
+          console.log("data : " + data);
           if (data.message === "success") {
             let accessToken = data["access-token"];
             let refreshToken = data["refresh-token"];
@@ -61,7 +61,7 @@ const memberStore = {
     },
     async getUserInfo({ commit, dispatch }, token) {
       let decodeToken = jwtDecode(token);
-      // console.log("2. getUserInfo() decodeToken :: ", decodeToken);
+      console.log("2. getUserInfo() decodeToken :: ", decodeToken);
       await findById(
         decodeToken.userid,
         ({ data }) => {
