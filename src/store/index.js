@@ -33,11 +33,11 @@ const store = new Vuex.Store({
         store.commit(Constant.SEARCH_KEYWORD, response.data);
       });
     },
-    [Constant.SET_APT_CODE_NAME]: (store, payload) => {
-      store.commit(Constant.SET_APT_CODE_NAME, payload);
+    [Constant.SET_APT_CODE_NAME]: (store, aptcode) => {
+      store.commit(Constant.SET_APT_CODE_NAME, aptcode);
     },
-    [Constant.GET_DEALLIST]: (store, payload) => {
-      http.get("/deal/deallist/" + payload).then((response) => {
+    [Constant.GET_DEALLIST]: (store, aptcode) => {
+      http.get("/deal/deallist/" + aptcode).then((response) => {
         store.commit(Constant.GET_DEALLIST, response.data);
       });
     },
@@ -46,27 +46,25 @@ const store = new Vuex.Store({
     },
     [Constant.INSERT_INTEREST]: (store, payload) => {
       http.post("/interest/insert", payload).then((response) => {
-        console.log(response.data);
         if (response.data == 1) alert("관심 목록에 추가했습니다.");
         else alert("관심 목록에 추가하지 못했습니다.");
-        store.dispatch(Constant.GET_INTERESTS);
+        store.dispatch(Constant.GET_INTERESTS, payload.userInfo);
       });
     },
     [Constant.DELETE_INTEREST]: (store, payload) => {
-      http.delete("/interest/delete/" + payload).then((response) => {
-        console.log(response.data);
+      http.delete("/interest/delete/", {data : payload} ).then((response) => {
         if (response.data == 1) alert("관심 목록에서 삭제했습니다.");
         else alert("관심 목록에서 삭제하지 못했습니다.");
-        store.dispatch(Constant.GET_INTERESTS);
+        store.dispatch(Constant.GET_INTERESTS, payload.userInfo);
       });
     },
-    [Constant.GET_INTERESTS]: (store) => {
-      http.get("/interest/getInterests").then((response) => {
+    [Constant.GET_INTERESTS]: (store, userInfo) => {
+      http.post("/interest/getInterests", userInfo).then((response) => {
         store.commit(Constant.GET_INTERESTS, response.data);
       });
     },
-    [Constant.GET_INTEREST_LIST]: (store) => {
-      http.get("/interest/list").then((response) => {
+    [Constant.GET_INTEREST_LIST]: (store, userInfo) => {
+      http.post("/interest/list", userInfo).then((response) => {
         store.commit(Constant.GET_INTEREST_LIST, response.data);
       });
     },

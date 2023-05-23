@@ -26,6 +26,8 @@
 
 <script>
 import Constant from "@/util/Constant";
+import { mapState } from "vuex";
+const memberStore = "memberStore";
 
 export default ({
     props: ['aptCode'],
@@ -42,14 +44,16 @@ export default ({
                 if (elem.aptCode === this.aptCode) cnt++;
             });
             return (cnt > 0);
-        }
+        },
+        ...mapState(memberStore, ["isLogin", "isLoginError", "userInfo"]),
     },
     methods : {
         toggleInterest() {
             let isInInterests = this.isInInterests;
-            if (isInInterests) this.$store.dispatch(Constant.DELETE_INTEREST, this.aptCode);
-            else this.$store.dispatch(Constant.INSERT_INTEREST, this.aptCode); 
-            this.$store.dispatch(Constant.GET_INTEREST_LIST);
+            console.log(this.userInfo);
+            if (isInInterests) this.$store.dispatch(Constant.DELETE_INTEREST, {aptCode : this.aptCode, userInfo : this.userInfo});
+            else this.$store.dispatch(Constant.INSERT_INTEREST, {aptCode : this.aptCode, userInfo : this.userInfo}); 
+            this.$store.dispatch(Constant.GET_INTEREST_LIST, this.userInfo);
         }
     }
     
