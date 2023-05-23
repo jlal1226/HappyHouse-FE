@@ -29,7 +29,6 @@ export default {
     mounted() {
         if (window.kakao && window.kakao.maps) this.loadMap();
         else this.loadScript();
-        this.mark(); 
     },
     methods: {
         loadScript() {
@@ -48,6 +47,7 @@ export default {
             };
 
             this.map = new window.kakao.maps.Map(container, options);
+            this.mark();
         },
         mark() {
             this.positions = [];
