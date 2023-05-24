@@ -25,19 +25,15 @@
 </template>
 
 <script>
-import Constant from "@/util/Constant";
-import { mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
+
+const dealStore = "dealStore";
 const memberStore = "memberStore";
+const interestStore = "interestStore";
 
 export default ({
     props: ['aptCode'],
     computed: {
-        dealList() {
-            return this.$store.state.dealList;
-        },
-        interests() {
-            return this.$store.state.interests;
-        },
         isInInterests(){
             let cnt = 0;
             this.interests.forEach(elem => {
@@ -46,14 +42,15 @@ export default ({
             return (cnt > 0);
         },
         ...mapState(memberStore, ["isLogin", "isLoginError", "userInfo"]),
+        ...mapState(dealStore, ["dealList"]),
+        ...mapState(interestStore, ["interests"])
     },
     methods : {
+        ...mapActions(interestStore, ["insert", "del", "getStatList", "getInterestDTOList"]),
         toggleInterest() {
             let isInInterests = this.isInInterests;
-            console.log(this.userInfo);
-            if (isInInterests) this.$store.dispatch(Constant.DELETE_INTEREST, {aptCode : this.aptCode, userInfo : this.userInfo});
-            else this.$store.dispatch(Constant.INSERT_INTEREST, {aptCode : this.aptCode, userInfo : this.userInfo}); 
-            this.$store.dispatch(Constant.GET_INTEREST_LIST, this.userInfo);
+            if (isInInterests) this.del({aptCode : this.aptCode, userInfo : this.userInfo});
+            else this.insert({aptCode : this.aptCode, userInfo : this.userInfo}); 
         }
     }
     

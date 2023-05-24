@@ -8,7 +8,9 @@
 
 <script>
 import SearchTable from "./SearchTable.vue";
-import Constant from "@/util/Constant";
+import { mapActions, mapState } from 'vuex';
+
+const dealStore = "dealStore";
 
 export default {
     components: {
@@ -20,20 +22,16 @@ export default {
         }
     },
     computed: {
-        aptName() {
-            return this.$store.state.aptName;
-        },
-        aptCode() {
-            return this.$store.state.aptCode;
-        }
+        ...mapState(dealStore, ["aptName", "aptCode"]),
     },
     watch: {
         'aptCode' : 'init'
     },
     methods: {
+        ...mapActions(dealStore, ["getList"]),
         init() {
             this.modalOn = true;
-            this.$store.dispatch(Constant.GET_DEALLIST, this.aptCode);
+            this.getList(this.aptCode);
         },
     }
 }
@@ -42,6 +40,5 @@ export default {
 <style>
 #sidebar-right{
     height : 100%;
-
 }
 </style>

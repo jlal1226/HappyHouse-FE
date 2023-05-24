@@ -18,7 +18,9 @@
 </template>
 
 <script>
-import Constant from "@/util/Constant";
+import { mapActions } from 'vuex';
+
+const dealStore = "dealStore";
 
 export default {
   name: 'HomeSearch',
@@ -36,8 +38,9 @@ export default {
     'keyword' : 'autocomplete' 
   },
   methods: {
+    ...mapActions(dealStore, ["search"]),
     autocomplete() {
-      this.$store.dispatch(Constant.SEARCH_KEYWORD, { sidoName: "", gugunName: "", dongName: "", keyword: this.keyword });
+      this.search({ sidoName: "", gugunName: "", dongName: "", keyword: this.keyword });
     },
     search() {
       this.$router.push("/deal");
