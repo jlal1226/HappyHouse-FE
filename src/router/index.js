@@ -70,6 +70,11 @@ const routes = [
         path: "join",
         name: "join",
         component: () => import("@/components/user/UserJoin")
+      },
+      {
+        path: "modify",
+        name: "modify",
+        component: () => import("@/components/user/UserModify")
       }
     ]
   }
