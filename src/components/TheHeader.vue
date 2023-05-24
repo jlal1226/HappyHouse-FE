@@ -24,7 +24,7 @@
             <template #button-content>
               {{ userInfo.userId }}님 환영합니다!
             </template>
-            <b-dropdown-item href="#">마이페이지</b-dropdown-item>
+            <b-dropdown-item :to="{name: 'mypage'}">마이페이지</b-dropdown-item>
             <b-dropdown-item
               class="align-self-center link"
               @click.prevent="onClickLogout"

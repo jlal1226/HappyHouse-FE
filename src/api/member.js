@@ -22,4 +22,13 @@ async function logout(userid, success, fail) {
   await api.get(`/user/logout/${userid}`).then(success).catch(fail);
 }
 
-export { login, findById, tokenRegeneration, logout };
+async function join(user, success, fail) {
+  console.log("회원가입: " + user);
+  await api.post(`/user/join`, user).then(success).catch(fail);
+}
+
+async function checkId(userid, success, fail) {
+  await api.get(`/user/${userid}`).then(success).catch(fail);
+}
+
+export { login, findById, tokenRegeneration, logout, join, checkId };

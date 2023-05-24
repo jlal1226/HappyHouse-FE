@@ -1,6 +1,6 @@
 import jwtDecode from "jwt-decode";
 import router from "@/router";
-import { login, findById, tokenRegeneration, logout } from "@/api/member";
+import { login, findById, tokenRegeneration, logout, join, checkId } from "@/api/member";
 
 const memberStore = {
   namespaced: true,
@@ -9,6 +9,9 @@ const memberStore = {
     isLoginError: false,
     userInfo: null,
     isValidToken: false,
+    isValidId: null,
+    isJoin: false,
+    isJoinError: false
   },
   getters: {
     checkUserInfo: function (state) {
@@ -17,6 +20,9 @@ const memberStore = {
     checkToken: function (state) {
       return state.isValidToken;
     },
+    checkValidId: function (state) {
+      return state.isValidId;
+    }
   },
   mutations: {
     SET_IS_LOGIN: (state, isLogin) => {
@@ -32,6 +38,15 @@ const memberStore = {
       state.isLogin = true;
       state.userInfo = userInfo;
     },
+    SET_IS_VALID_ID: (state, isValidId) => {
+      state.isValidId = isValidId
+    },
+    SET_IS_JOIN: (state, isJoin) => {
+      state.isJoin = isJoin;
+    },
+    SET_IS_JOIN_ERROR: (state, isJoinError) => {
+      state.isJoinError = isJoinError;
+    }
   },
   actions: {
     async userConfirm({ commit }, user) {
@@ -42,7 +57,11 @@ const memberStore = {
           if (data.message === "success") {
             let accessToken = data["access-token"];
             let refreshToken = data["refresh-token"];
-            console.log("login success token created!!!! >> ", accessToken, refreshToken);
+            console.log(
+              "login success token created!!!! >> ",
+              accessToken,
+              refreshToken
+            );
             commit("SET_IS_LOGIN", true);
             commit("SET_IS_LOGIN_ERROR", false);
             commit("SET_IS_VALID_TOKEN", true);
@@ -143,6 +162,42 @@ const memberStore = {
         }
       );
     },
+    async userJoin({ commit }, user) {
+      console.log(user);
+      await join(
+        user,
+        ({ data }) => {
+          console.log(data);
+          if (data.message === 'success') {
+            console.log("회원가입 성공");
+            commit("SET_IS_JOIN", true)
+          }
+        },
+        (error) => {
+          commit("SET_IS_JOIN_ERROR", true);
+          console.log(error);
+        }
+      );
+    },
+    async idCheck({ commit }, userId) {
+      console.log("아이디 검증");
+      await checkId(
+        userId,
+        ({ data }) => {
+          if (data.message === "success") {
+            console.log("사용할 수 있는 아이디");
+            commit("SET_IS_VALID_ID", true);
+          } else {
+            console.log("사용할 수 없는 아이디");
+            commit("SET_IS_VALID_ID", false);
+          }
+        },
+        async (error) => {
+          console.log("서버 오류");
+          console.log(error);
+        }
+      )
+    }
   },
 };
 

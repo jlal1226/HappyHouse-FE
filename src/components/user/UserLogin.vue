@@ -73,8 +73,8 @@ export default {
       }
     },
     movePage() {
-      //this.$router.push({ name: "join" });
-    },
+      this.$router.push({ name: "join" });
+    }
   },
 };
 </script>
