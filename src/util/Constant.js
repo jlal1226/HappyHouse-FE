@@ -7,8 +7,8 @@ export default {
     REMOVE_DEALLIST : "removeDealList",
     INSERT_INTEREST: "insertInterest",
     DELETE_INTEREST: "deleteInterest",
-    GET_INTERESTS: "getInterests",
-    GET_INTEREST_LIST : "getInterest"
+    GET_INTERESTS: "getInterestDTOList",
+    GET_INTEREST_LIST : "getInterestStats"
 
 
 

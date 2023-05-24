@@ -4,7 +4,7 @@
                 <b-input-group>
                     <b-form-input class="input_field" placeholder="키워드" v-model="keyword" id="keyword"></b-form-input>
                     <b-input-group-append>
-                        <b-button variant="outline-success" @click="search" style="height:27px">검색</b-button>
+                        <b-button variant="outline-success" @click="searchKeyword" style="height:27px">검색</b-button>
                     </b-input-group-append>
                 </b-input-group>
                 <b-form-select :options="sidos" placeholder="시/도명" list="sidoname" v-model="sido" @change="getGugunList" autocomplete="on" id="sido"></b-form-select>
@@ -15,7 +15,9 @@
 </template>
 
 <script>
-import Constant from '@/util/Constant';
+import { mapActions, mapState } from 'vuex';
+
+const dealStore = "dealStore";
 
 export default {
     data(){
@@ -35,16 +37,15 @@ export default {
         this.gugun = "";
         this.dong = "";
         this.keyword = "";
-        this.getRegions();
+        this.getSidos();
     },
     computed : {
-        regions() {
-            return this.$store.state.regions;
-        }
+        ...mapState(dealStore, ["regions"])
     },
     methods : {
-        getRegions() {
-            this.$store.dispatch(Constant.ALL_REGION);
+        ...mapActions(dealStore, ["getRegionInfos", "search"]),
+        getSidos() {
+            this.getRegionInfos();
             this.regions.forEach((element) => {
                 if (!this.sidos.includes(element.sidoName)) {
                     this.sidos.push(element.sidoName);
@@ -73,9 +74,8 @@ export default {
                 });
             }
         },
-        search(){
-            this.$store.dispatch(Constant.SEARCH_KEYWORD, { sidoName: this.sido, gugunName: this.gugun, dongName: this.dong, keyword : this.keyword});
-            //만약 검색 결과가 없으면 -> 해당 지역에서 찾기
+        searchKeyword(){
+            this.search({ sidoName: this.sido, gugunName: this.gugun, dongName: this.dong, keyword : this.keyword});
         },
         keyevent() {
             let keycode = event.keyCode;
@@ -87,7 +87,6 @@ export default {
             this.dong= "";
             this.keyword= "";
         }
-
     }
 }
 </script>

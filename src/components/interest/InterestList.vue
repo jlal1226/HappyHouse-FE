@@ -24,7 +24,11 @@
 
 <script>
 import SearchTable from "../map/SearchTable.vue";
-import Constant from "@/util/Constant";
+import { mapState, mapActions } from 'vuex';
+
+const dealStore = "dealStore";
+const memberStore = "memberStore";
+const interestStore = "interestStore";
 
 export default {
     components : {
@@ -56,19 +60,21 @@ export default {
     },
     created() {
         this.aptCode = "";
-        this.$store.dispatch(Constant.REMOVE_DEALLIST);
+        this.getStatList(this.userInfo);
+        this.resetDealList();
     },
     computed :{
-        interestList() {
-            return this.$store.state.interestList;
-        },
+        ...mapState(interestStore, ["interestList"]),
+        ...mapState(memberStore, ["userInfo"])
     },
     methods : {
+        ...mapActions(interestStore, ["getStatList", "getInterestDTOList"]),
+        ...mapActions(dealStore, ["getList", "resetDealList"]),
         selectApt(items){
             if (items.length > 0) {
                 this.selected = items;
                 this.aptCode = this.selected[0].aptCode;
-                this.$store.dispatch(Constant.GET_DEALLIST, this.aptCode);
+                this.getList(this.aptCode);
             }
             else this.aptCode = "";
         }

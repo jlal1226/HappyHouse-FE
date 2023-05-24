@@ -5,7 +5,9 @@
 </template>
 
 <script>
-import Constant from '@/util/Constant';
+import { mapState, mapActions } from 'vuex';
+
+const dealStore = "dealStore";
 
 export default {
     name : 'KakaoMap',
@@ -17,9 +19,7 @@ export default {
         };
     },
     computed : {
-        searched(){
-            return this.$store.state.searched;
-        }
+        ...mapState(dealStore, ["searched"]),
     },
     watch :{
         'searched' : 'mark' 
@@ -31,6 +31,7 @@ export default {
         else this.loadScript();
     },
     methods: {
+        ...mapActions(dealStore, ["setApartment"]),
         loadScript() {
             const script = document.createElement("script");
             script.src = "//dapi.kakao.com/v2/maps/sdk.js?appkey=" + process.env.VUE_APP_KAKAO_MAP_API_KEY + "&autoload=false";
@@ -96,7 +97,7 @@ export default {
             }
         },
         showDetail(aptCode, title){
-            this.$store.dispatch(Constant.SET_APT_CODE_NAME, {aptCode, title}); 
+            this.setApartment({aptCode, title});
         }
     },
 
