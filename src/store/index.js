@@ -1,13 +1,12 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import http from '@/axios/axios-common.js'
+import Vue from "vue";
+import Vuex from "vuex";
+import http from "@/axios/axios-common.js";
 import createPersistedState from "vuex-persistedstate";
-import Constant from '@/util/Constant'
+import Constant from "@/util/Constant";
 
+import memberStore from "@/store/modules/memberStore";
 
-import memberStore from "@/store/modules/memberStore"
-
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 const store = new Vuex.Store({
   modules: {
@@ -61,6 +60,8 @@ const store = new Vuex.Store({
     [Constant.GET_INTERESTS]: (store, userInfo) => {
       http.post("/interest/getInterests", userInfo).then((response) => {
         store.commit(Constant.GET_INTERESTS, response.data);
+      }).catch(() => {
+        console.log("error catch");
       });
     },
     [Constant.GET_INTEREST_LIST]: (store, userInfo) => {
@@ -102,5 +103,3 @@ const store = new Vuex.Store({
 });
 
 export default store;
-
-
