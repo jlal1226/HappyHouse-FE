@@ -1,13 +1,12 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import http from '@/axios/axios-common.js'
+import Vue from "vue";
+import Vuex from "vuex";
+import http from "@/axios/axios-common.js";
 import createPersistedState from "vuex-persistedstate";
-import Constant from '@/util/Constant'
+import Constant from "@/util/Constant";
 
+import memberStore from "@/store/modules/memberStore";
 
-import memberStore from "@/store/modules/memberStore"
-
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 const store = new Vuex.Store({
   modules: {
@@ -44,13 +43,18 @@ const store = new Vuex.Store({
     [Constant.REMOVE_DEALLIST]: (store) => {
       store.commit(Constant.REMOVE_DEALLIST);
     },
-    [Constant.INSERT_INTEREST]: (store, payload) => {
-      http.post("/interest/insert", payload).then((response) => {
-        console.log(response.data);
-        if (response.data == 1) alert("관심 목록에 추가했습니다.");
-        else alert("관심 목록에 추가하지 못했습니다.");
-        store.dispatch(Constant.GET_INTERESTS);
-      });
+    [Constant.INSERT_INTEREST]: async (store, payload) => {
+      await http
+        .post("/interest/insert", payload)
+        .then((response) => {
+          console.log(response.data);
+          if (response.data == 1) alert("관심 목록에 추가했습니다.");
+          else alert("관심 목록에 추가하지 못했습니다.");
+          store.dispatch(Constant.GET_INTERESTS);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     [Constant.DELETE_INTEREST]: (store, payload) => {
       http.delete("/interest/delete/" + payload).then((response) => {
@@ -63,6 +67,8 @@ const store = new Vuex.Store({
     [Constant.GET_INTERESTS]: (store) => {
       http.get("/interest/getInterests").then((response) => {
         store.commit(Constant.GET_INTERESTS, response.data);
+      }).catch(() => {
+        console.log("error catch");
       });
     },
     [Constant.GET_INTEREST_LIST]: (store) => {
@@ -104,5 +110,3 @@ const store = new Vuex.Store({
 });
 
 export default store;
-
-
