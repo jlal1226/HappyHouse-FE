@@ -3,7 +3,7 @@
     <b-row>
       <b-col></b-col>
       <b-col cols="8">
-        <b-alert variant="secondary" show><h3>회원가입</h3></b-alert>
+        <b-alert variant="secondary" show><h3>회원 정보 수정</h3></b-alert>
       </b-col>
       <b-col></b-col>
     </b-row>
@@ -17,7 +17,7 @@
                 id="username"
                 v-model="user.name"
                 required
-                placeholder="이름 입력...."
+                :placeholder="userInfo.name"
               ></b-form-input>
             </b-form-group>
             <b-form-group label="아이디:" label-for="userid">
@@ -25,31 +25,11 @@
                 <b-input-group>
                   <b-form-input
                     id="userid"
-                    v-model="user.userId"
+                    v-model="userInfo.userId"
                     required
-                    placeholder="아이디 입력...."
                   ></b-form-input>
-                  <b-button
-                    type="button"
-                    variant="primary"
-                    class="m-1"
-                    @click="checkId"
-                    >중복체크</b-button
-                  >
                 </b-input-group>
               </div>
-              <span :class="[isValidId ? 'validId' : 'invalidId']">{{
-                message
-              }}</span>
-            </b-form-group>
-            <b-form-group label="비밀번호:" label-for="userpwd">
-              <b-form-input
-                type="password"
-                id="userpwd"
-                v-model="user.password"
-                required
-                placeholder="비밀번호 입력...."
-              ></b-form-input>
             </b-form-group>
             <b-form-group label="이메일:" label-for="email">
               <b-form-input
@@ -67,18 +47,9 @@
                 placeholder="전화번호 입력...."
               ></b-form-input>
             </b-form-group>
-            <b-form-group>주소</b-form-group>
-            <b-button @click="execDaumPostcode()">주소찾기</b-button>
-            <b-input type="text" v-model="postcode" placeholder="우편번호" />
-            <b-input type="text" v-model="address" placeholder="주소" />
-            <b-input
-              type="text"
-              v-model="detailAddress"
-              placeholder="상세주소"
-            />
             <br />
-            <b-button type="button" variant="success" @click="join"
-              >회원가입</b-button
+            <b-button type="button" variant="success" @click="modify"
+              >수정하기</b-button
             >
           </b-form>
         </b-card>
@@ -93,15 +64,15 @@ import { mapActions, mapState } from "vuex";
 const memberStore = "memberStore";
 
 export default {
-  name: "UserJoin",
+  name: "UserModify",
   data() {
     return {
       user: {
         name: null,
         userId: null,
         password: null,
-        address: null,
         phone: null,
+        address: null,
         email: null,
       },
       message: "",
@@ -111,32 +82,24 @@ export default {
       detailAddress: "",
     };
   },
+  mounted() {
+    this.user = { ...this.userInfo };
+  },
   computed: {
-    ...mapState(memberStore, ["isValidId", "isJoin", "isJoinError"]),
+    ...mapState(memberStore, ["userInfo", "isModified"]),
   },
   methods: {
-    ...mapActions(memberStore, ["idCheck", "userJoin"]),
-    async checkId() {
-      console.log("아이디 체크 메소드 실행");
-      await this.idCheck(this.user.userId);
-      console.log("사용가능? : " + this.isValidId);
-      if (this.isValidId == true) {
-        this.message = "사용할 수 있는 아이디 입니다.";
-      } else if (this.isValidId == false) {
-        this.message = "사용할 수 없는 아이디 입니다.";
-      }
-    },
-    async join() {
-      this.user.address = this.address + " " + this.detailAddress;
-      await this.userJoin(this.user);
+    ...mapActions(memberStore, ["modifyUser"]),
+    async modify() {
+      console.log("수정 시도");
+      await this.modifyUser(this.user);
+      console.log("수정 완료");
 
-      if (this.isJoin) {
-        this.$swal("환영합니다!")
-        this.$router.push({name: "login"});
-      }
-
-      if (this.isJoinError) {
-        this.$swal("회원가입 실패")
+      if (this.isModified) {
+        this.$swal("회원정보 수정 완료");
+        this.$router.push({name: "mypage"});
+      } else {
+        this.$swal("회원정보 수정 실패");
       }
     },
     execDaumPostcode() {
@@ -181,13 +144,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.validId {
-  color: green;
-}
-
-.invalidId {
-  color: red;
-}
-</style>

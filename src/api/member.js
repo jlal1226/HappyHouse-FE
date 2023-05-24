@@ -31,4 +31,8 @@ async function checkId(userid, success, fail) {
   await api.get(`/user/${userid}`).then(success).catch(fail);
 }
 
-export { login, findById, tokenRegeneration, logout, join, checkId };
+async function modifyUserInfo(user, success, fail) {
+  await api.put(`/user`, user).then(success).catch(fail);
+}
+
+export { login, findById, tokenRegeneration, logout, join, checkId, modifyUserInfo };

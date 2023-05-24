@@ -1,17 +1,26 @@
 import jwtDecode from "jwt-decode";
 import router from "@/router";
-import { login, findById, tokenRegeneration, logout, join, checkId } from "@/api/member";
+import {
+  login,
+  findById,
+  tokenRegeneration,
+  logout,
+  join,
+  checkId,
+  modifyUserInfo,
+} from "@/api/member";
 
 const memberStore = {
   namespaced: true,
   state: {
     isLogin: false,
-    isLoginError: false,
+    isLoginError: null,
     userInfo: null,
     isValidToken: false,
     isValidId: null,
     isJoin: false,
-    isJoinError: false
+    isJoinError: false,
+    isModified: null,
   },
   getters: {
     checkUserInfo: function (state) {
@@ -22,7 +31,7 @@ const memberStore = {
     },
     checkValidId: function (state) {
       return state.isValidId;
-    }
+    },
   },
   mutations: {
     SET_IS_LOGIN: (state, isLogin) => {
@@ -35,17 +44,19 @@ const memberStore = {
       state.isValidToken = isValidToken;
     },
     SET_USER_INFO: (state, userInfo) => {
-      state.isLogin = true;
       state.userInfo = userInfo;
     },
     SET_IS_VALID_ID: (state, isValidId) => {
-      state.isValidId = isValidId
+      state.isValidId = isValidId;
     },
     SET_IS_JOIN: (state, isJoin) => {
       state.isJoin = isJoin;
     },
     SET_IS_JOIN_ERROR: (state, isJoinError) => {
       state.isJoinError = isJoinError;
+    },
+    SET_IS_MODIFIED: (state, isModified) => {
+      state.isModified = isModified;
     }
   },
   actions: {
@@ -68,6 +79,7 @@ const memberStore = {
             sessionStorage.setItem("access-token", accessToken);
             sessionStorage.setItem("refresh-token", refreshToken);
           } else {
+            console.log("로그인 실패");
             commit("SET_IS_LOGIN", false);
             commit("SET_IS_LOGIN_ERROR", true);
             commit("SET_IS_VALID_TOKEN", false);
@@ -168,9 +180,9 @@ const memberStore = {
         user,
         ({ data }) => {
           console.log(data);
-          if (data.message === 'success') {
+          if (data.message === "success") {
             console.log("회원가입 성공");
-            commit("SET_IS_JOIN", true)
+            commit("SET_IS_JOIN", true);
           }
         },
         (error) => {
@@ -196,8 +208,29 @@ const memberStore = {
           console.log("서버 오류");
           console.log(error);
         }
-      )
-    }
+      );
+    },
+    async modifyUser({ dispatch, commit }, user) {
+      await modifyUserInfo(
+        user,
+        async ({ data }) => {
+          console.log(data);
+          if (data.message === "success") {
+            const token = sessionStorage.getItem("access-token");
+
+            console.log("회원정보 수정 성공");
+            await dispatch("getUserInfo", token);
+            commit("SET_IS_MODIFIED", true);
+          } else {
+            console.log("회원정보 수정 실패");
+            commit("SET_IS_MODIFIED", false);
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
   },
 };
 
