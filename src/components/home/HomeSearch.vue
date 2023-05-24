@@ -9,7 +9,7 @@
             <option v-for="(result, index) in searched" :key ="index"> {{ result.apartmentName }} </option>
           </datalist>
           <b-input-group-append>
-            <b-button variant="outline-success" @click="search">검색</b-button>
+            <b-button variant="outline-success" @click="searchdeal">검색</b-button>
           </b-input-group-append>
         </b-input-group>
         
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 const dealStore = "dealStore";
 
@@ -31,9 +31,7 @@ export default {
     }
   },
   computed: {
-    searched() {
-      return this.$store.state.searched;
-    }
+    ...mapState(dealStore, ["searched"]),
   },
   watch: {
     'keyword' : 'autocomplete' 
@@ -43,7 +41,7 @@ export default {
     autocomplete() {
       this.search({ sidoName: "", gugunName: "", dongName: "", keyword: this.keyword });
     },
-    search() {
+    searchdeal() {
       this.$router.push("/deal");
     }
   }

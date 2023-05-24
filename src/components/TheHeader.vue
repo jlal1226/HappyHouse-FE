@@ -6,17 +6,11 @@
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
       <b-collapse id="nav-collapse" is-nav>
-        <b-navbar-nav>
-          <b-nav-item href="#">실거래</b-nav-item>
-          <b-nav-item href="#">매물</b-nav-item>
-          <b-nav-item :to="{ name: 'board' }"> 게시판 </b-nav-item>
-        </b-navbar-nav>
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
           <b-navbar-nav>
             <b-nav-item :to="{ name: 'deal' }">실거래</b-nav-item>
-            <b-nav-item href="#">매물</b-nav-item>
-            <b-nav-item :to="{ name: 'interest' }"> 관심물건 </b-nav-item>
+            <b-nav-item v-if="userInfo" :to="{ name: 'interest' }"> 관심물건 </b-nav-item>
             <b-nav-item :to="{ name: 'board' }"> 게시판 </b-nav-item>
           </b-navbar-nav>
           <b-nav-item-dropdown left v-if="userInfo">

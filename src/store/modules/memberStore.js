@@ -35,7 +35,6 @@ const memberStore = {
       state.isValidToken = isValidToken;
     },
     SET_USER_INFO: (state, userInfo) => {
-      state.isLogin = true;
       state.userInfo = userInfo;
     },
     SET_IS_VALID_ID: (state, isValidId) => {
