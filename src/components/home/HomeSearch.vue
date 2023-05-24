@@ -12,6 +12,7 @@
             <b-button variant="outline-success" @click="search">검색</b-button>
           </b-input-group-append>
         </b-input-group>
+        
       </b-form-group>
     </div>
   </div>
