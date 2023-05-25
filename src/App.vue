@@ -10,7 +10,7 @@ import TheHeaderVue from './components/TheHeader.vue'
 export default {
   name: "App",
   components: {
-    TheHeaderVue
+    TheHeaderVue,
   }
 }
 </script>
