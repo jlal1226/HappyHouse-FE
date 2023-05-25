@@ -4,23 +4,9 @@
             <b-icon-heart-fill v-if="isInInterests" @click="toggleInterest"></b-icon-heart-fill>
             <b-icon-heart v-else @click="toggleInterest"></b-icon-heart>
         </div>
-        <b-img src="https://picsum.photos/500/500/?image=54" fluid thumbnail></b-img>
-        <div> 주소 </div>
-        <div> 건축년도 </div>
-        <table> 
-            <th>
-                <td>거래년월</td>
-                <td>거래가</td>
-                <td>면적</td>
-                <td>층</td>
-            </th>
-            <tr v-for="(deal, index) in dealList" :key = "index">
-                <td>{{ deal.dealYear }}.{{ deal.dealMonth }}</td>
-                <td>{{ deal.dealAmount}}</td>
-                <td>{{ deal.area }}</td>
-                <td>{{ deal.floor }}</td>
-            </tr>
-        </table>
+        <b-img src="https://picsum.photos/500/500/?image=54" :width= "imgSize" :height="imgSize" fluid thumbnail></b-img>
+        <b-table :fields="fields" :items="dealList"> 
+        </b-table>
     </div>
 </template>
 
@@ -32,7 +18,33 @@ const memberStore = "memberStore";
 const interestStore = "interestStore";
 
 export default ({
-    props: ['aptCode'],
+    data(){
+        return {
+            fields : [
+                {
+                    key : 'dealYear',
+                    label : '연도'
+                },
+                {
+                    key : 'dealMonth',
+                    label : "월"
+                },
+                {
+                    key: 'dealAmount',
+                    label : '거래가'
+                },
+                {
+                    key: 'area',
+                    label : '면적'
+                },
+                {
+                    key: 'floor',
+                    label : '층'
+                }
+            ],
+        }
+    },
+    props: ['aptCode', 'imgSize'],
     computed: {
         isInInterests(){
             let cnt = 0;
