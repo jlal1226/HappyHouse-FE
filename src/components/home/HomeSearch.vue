@@ -1,6 +1,5 @@
 <template>
   <div class="search">
-    <h1 class="title">봐방방봐오바와봐</h1>
     <div class="container d-flex justify-content-center mt-5" style="padding-top: 300px;">
       <b-form-group>
         <b-input-group>
