@@ -35,4 +35,8 @@ async function modifyUserInfo(user, success, fail) {
   await api.put(`/user`, user).then(success).catch(fail);
 }
 
-export { login, findById, tokenRegeneration, logout, join, checkId, modifyUserInfo };
+async function deleteUser (userId, success, fail) {
+  await api.delete(`/user/${userId}`).then(success).catch(fail);
+}
+
+export { login, findById, tokenRegeneration, logout, join, checkId, modifyUserInfo, deleteUser };

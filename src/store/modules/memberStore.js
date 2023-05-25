@@ -8,6 +8,7 @@ import {
   join,
   checkId,
   modifyUserInfo,
+  deleteUser,
 } from "@/api/member";
 
 const memberStore = {
@@ -57,7 +58,7 @@ const memberStore = {
     },
     SET_IS_MODIFIED: (state, isModified) => {
       state.isModified = isModified;
-    }
+    },
   },
   actions: {
     async userConfirm({ commit }, user) {
@@ -224,6 +225,26 @@ const memberStore = {
           } else {
             console.log("회원정보 수정 실패");
             commit("SET_IS_MODIFIED", false);
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    async remove({ commit }, userId) {
+      console.log(typeof userId);
+      await deleteUser(
+        userId,
+        ({ data }) => {
+          console.log(data);
+          if (data.message === "success") {
+            commit("SET_IS_LOGIN", false);
+            commit("SET_USER_INFO", null);
+            commit("SET_IS_VALID_TOKEN", false);
+            sessionStorage.clear();
+          } else {
+            console.log("회원 탈퇴 실패");
           }
         },
         (error) => {
