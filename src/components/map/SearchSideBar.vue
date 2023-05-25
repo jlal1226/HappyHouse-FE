@@ -1,7 +1,7 @@
 <template>
     <div>
         <b-sidebar id="sidebar" :title="aptName" v-model="modalOn" right shadow>
-           <search-table :aptCode="aptCode"></search-table> 
+           <search-table :aptCode="aptCode" imgSize="300px"></search-table> 
         </b-sidebar>
     </div>
 </template>

@@ -23,6 +23,7 @@ const interestStore = {
                 ({ data }) => {
                     if (data === 1) alert("관심 목록에 추가했습니다.");
                     dispatch(Constant.GET_INTERESTS, payload.userInfo)
+                    dispatch("getStatList", payload.userInfo)
                 },
                 async () => {
                     await dispatch("authenticate");
@@ -37,6 +38,7 @@ const interestStore = {
                     if (data === 1) alert("관심 목록에서 삭제했습니다.");
                     else alert("관심 목록에서 삭제하지 못했습니다.");
                     dispatch(Constant.GET_INTERESTS, payload.userInfo)
+                    dispatch("getStatList", payload.userInfo)
                 },
                 async () => {
                     await dispatch("authenticate");
@@ -61,6 +63,7 @@ const interestStore = {
                 userInfo,
                 ({ data }) => {
                     commit(Constant.GET_INTERESTS, data);
+                    dispatch("getStatList", userInfo)
                 },
                 async () => {
                     await dispatch("authenticate");

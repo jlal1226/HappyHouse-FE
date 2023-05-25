@@ -1,24 +1,35 @@
 <template>
     <div>
-        <b-table
-            id = "interestsList" 
-            :items="interestList" 
-            selectable
-            select-mode="single"
-            @row-selected = "selectApt"
-            ref="interestsList"
-            :fields="fields"    
-        >
-            <template #cell(selected)="{ rowSelected }">
-                <template v-if="rowSelected">
-                    <span aria-hidden="true">&check;</span>
-                </template>
-                <template v-else>
-                    <span aria-hidden="true">&nbsp;</span>
-                </template>
-            </template>
-        </b-table>
-        <search-table :aptCode="aptCode"> </search-table>
+        <div style="font-size:64px"> 관심 물건 리스트</div>
+        <b-container style="padding : 30px">
+            <b-row align-v="stretch">
+            <b-col cols="6">
+                <b-table
+                    id = "interestsList" 
+                    :items="interestList" 
+                    selectable
+                    select-mode="single"
+                    @row-selected = "selectApt"
+                    ref="interestsList"
+                    :fields="fields"    
+                    sticky-header = "600px"
+                    :key = "componentKey"
+                >
+                    <template #cell(selected)="{ rowSelected }">
+                        <template v-if="rowSelected">
+                            <span aria-hidden="true">&check;</span>
+                        </template>
+                        <template v-else>
+                            <span aria-hidden="true">&nbsp;</span>
+                        </template>
+                    </template>
+                </b-table>
+            </b-col>
+            <b-col cols="6">
+                <search-table :aptCode="aptCode" id="aside" imgSize="300px"> </search-table>
+            </b-col>
+        </b-row>
+        </b-container>
     </div>
 </template>
 
@@ -55,7 +66,8 @@ export default {
                 }
             ],
             selected: [],
-            aptCode : String
+            aptCode : String,
+            componentKey : 0
         }
     },
     created() {
@@ -66,6 +78,12 @@ export default {
     computed :{
         ...mapState(interestStore, ["interestList"]),
         ...mapState(memberStore, ["userInfo"])
+    },
+    watch : {
+        interestList : function (){
+            this.componentKey += 1;
+            console.log(this.componentKey);
+        }
     },
     methods : {
         ...mapActions(interestStore, ["getStatList", "getInterestDTOList"]),
@@ -78,33 +96,22 @@ export default {
                 this.getList(this.aptCode);
             }
             else this.aptCode = "";
+        },
+        rerender(){
+            this.componentKey += 1;
         }
     }
-
 }
 </script>
-const checkUserInfo = store.getters["memberStore/checkUserInfo"];
-const checkToken = store.getters["memberStore/checkToken"];
-let token = sessionStorage.getItem("access-token");
 
-if (checkUserInfo != null && token) {
-  await store.dispatch("memberStore/getUserInfo", token);
-}
-if (!checkToken || checkUserInfo === null) {
-  alert("로그인이 필요한 페이지입니다..");
-  // next({ name: "login" });
-  router.push({ name: "login" });
-} else {
-  next();
-}
 <style>
 #interestsList {
-    max-width: 50%;
+    overflow: auto;
 }
-search-table {
-    right : 0;
 
-
+#aside{
+    max-height : 600px;
+    overflow : auto;
 }
 
 </style>
