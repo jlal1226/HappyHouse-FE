@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-navbar toggleable="lg" type="dark" variant="success">
+    <b-navbar toggleable="lg" class="nav">
       <b-navbar-brand :to="{ name: 'home' }">VaBang</b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -82,3 +82,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.nav {
+  background-color: #81D588;
+}
+</style>
