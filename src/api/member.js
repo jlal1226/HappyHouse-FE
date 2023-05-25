@@ -1,6 +1,4 @@
-import { apiInstance } from "./index.js";
-
-const api = apiInstance();
+import api from "./index.js";
 
 async function login(user, success, fail) {
   console.log(user);
@@ -13,8 +11,7 @@ async function findById(userid, success, fail) {
 }
 
 async function tokenRegeneration(user, success, fail) {
-  api.defaults.headers["refresh-token"] =
-    sessionStorage.getItem("refresh-token"); //axios header에 refresh-token 셋팅
+  api.defaults.headers["refresh-token"] = sessionStorage.getItem("refresh-token"); //axios header에 refresh-token 셋팅
   await api.post(`/user/refresh`, user).then(success).catch(fail);
 }
 

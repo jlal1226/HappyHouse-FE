@@ -7,7 +7,7 @@
     </b-row>
     <b-row class="mb-1">
       <b-col class="text-right">
-        <b-button variant="outline-primary" @click="moveWrite()">글쓰기</b-button>
+        <b-button v-if="isLogin" variant="outline-primary" @click="moveWrite()">글쓰기</b-button>
       </b-col>
     </b-row>
     <b-row>
@@ -26,6 +26,9 @@
 
 <script>
 import { listArticle } from "@/api/board";
+import { mapState } from 'vuex';
+
+const memberStore = "memberStore";
 
 export default {
   name: "BoardList",
@@ -69,6 +72,10 @@ export default {
       });
     },
   },
+  computed : {
+    ...mapState(memberStore, ["isLogin"])
+
+  }
 };
 </script>
 

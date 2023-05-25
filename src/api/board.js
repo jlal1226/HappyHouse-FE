@@ -1,6 +1,4 @@
-import { apiInstance } from "./index.js";
-
-const api = apiInstance();
+import api from "./index.js";
 
 function listArticle(param, success, fail) {
   api.get(`/board`, { params: param }).then(success).catch(fail);

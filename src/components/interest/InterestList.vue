@@ -70,6 +70,7 @@ export default {
     methods : {
         ...mapActions(interestStore, ["getStatList", "getInterestDTOList"]),
         ...mapActions(dealStore, ["getList", "resetDealList"]),
+        ...mapActions(memberStore, ["checkUserInfo", "checkToken", "getUserInfo"]),
         selectApt(items){
             if (items.length > 0) {
                 this.selected = items;
@@ -82,7 +83,20 @@ export default {
 
 }
 </script>
+const checkUserInfo = store.getters["memberStore/checkUserInfo"];
+const checkToken = store.getters["memberStore/checkToken"];
+let token = sessionStorage.getItem("access-token");
 
+if (checkUserInfo != null && token) {
+  await store.dispatch("memberStore/getUserInfo", token);
+}
+if (!checkToken || checkUserInfo === null) {
+  alert("로그인이 필요한 페이지입니다..");
+  // next({ name: "login" });
+  router.push({ name: "login" });
+} else {
+  next();
+}
 <style>
 #interestsList {
     max-width: 50%;
