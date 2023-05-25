@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import BoardListView from '@/views/BoardListView.vue'
 import HouseDealView from '@/views/HouseDealView.vue'
 import InterestView from '@/views/InterestView.vue'
 import store from "@/store";
@@ -34,11 +33,6 @@ const routes = [
     path: '/',
     name: 'home',
     component: HomeView
-  },
-  {
-    path: '/board',
-    name: 'board',
-    component: BoardListView
   },
   {
     path: '/deal',
@@ -77,7 +71,44 @@ const routes = [
         component: () => import("@/components/user/UserModify")
       }
     ]
-  }
+  },
+  {
+    path: "/board",
+    name: "board",
+    component: () => import(/* webpackChunkName: "board" */ "@/views/BoardListView"),
+    redirect: "/board/list",
+    children: [
+      {
+        path: "list",
+        name: "boardlist",
+        component: () => import(/* webpackChunkName: "board" */ "@/components/board/BoardList"),
+      },
+      {
+        path: "write",
+        name: "boardwrite",
+        beforeEnter: onlyAuthUser,
+        component: () => import(/* webpackChunkName: "board" */ "@/components/board/BoardWrite"),
+      },
+      {
+        path: "view/:board_id",
+        name: "boardview",
+        beforeEnter: onlyAuthUser,
+        component: () => import(/* webpackChunkName: "board" */ "@/components/board/BoardView"),
+      },
+      {
+        path: "modify",
+        name: "boardmodify",
+        beforeEnter: onlyAuthUser,
+        component: () => import(/* webpackChunkName: "board" */ "@/components/board/BoardModify"),
+      },
+      {
+        path: "delete/:board_id",
+        name: "boarddelete",
+        beforeEnter: onlyAuthUser,
+        component: () => import(/* webpackChunkName: "board" */ "@/components/board/BoardDelete"),
+      },
+    ],
+  },
 ]
 
 const router = new VueRouter({

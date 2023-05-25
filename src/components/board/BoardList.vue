@@ -1,68 +1,84 @@
 <template>
-    <div>
-    <b-table sticky-header="true" hover striped :items="items" :fields="fields"> 
-        <template #cell(title)="data">
-            <router-link to="#"> {{ data.item.title }} </router-link> 
-        </template>
-    </b-table>
-    <button @click="moveleft"> (왼쪽) </button> <!-- 맨앞/이전페이지, 다음페이지/맨뒤-->
-        <span v-for="index in totalpg" :key ="index">
-            <router-link to="#"> {{ index }} </router-link>
-        </span>
-    <button @click="moveright"> (오른쪽) </button>
-    </div>
+  <b-container class="bv-example-row mt-3">
+    <b-row>
+      <b-col>
+        <b-alert show><h3>글목록</h3></b-alert>
+      </b-col>
+    </b-row>
+    <b-row class="mb-1">
+      <b-col class="text-right">
+        <b-button variant="outline-primary" @click="moveWrite()">글쓰기</b-button>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col>
+        <b-table striped hover :items="articles" :fields="fields" @row-clicked="viewArticle">
+          <template #cell(subject)="data">
+            <router-link :to="{ name: 'boardview', params: { board_id: data.item.board_id} }">
+              {{ data.item.title}}
+            </router-link>
+          </template>
+        </b-table>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
+import { listArticle } from "@/api/board";
 
 export default {
-    data() {
-        return {
-            pg : Number,
-            totalpg : Number,
-            spp : Number,
-            key: String,
-            items : [],
-            fields : [
-                { key: "articleno", label: "글번호", tdClass: "tdClass" },
-                { key: "title", label: "제목", tdClass: "tdSubject" },
-                { key: "userid", label: "작성자", tdClass: "tdClass" },
-                { key: "regtime", label: "작성일", tdClass: "tdClass" },
-                { key: "hit", label: "조회수", tdClass: "tdClass" },
-            ]
-        };
+  name: "BoardList",
+  data() {
+    return {
+      articles: [],
+      fields: [
+        { key: "articleno", label: "글번호", tdClass: "tdClass" },
+        { key: "subject", label: "제목", tdClass: "tdSubject" },
+        { key: "userid", label: "작성자", tdClass: "tdClass" },
+        { key: "regtime", label: "작성일", tdClass: "tdClass" },
+        { key: "hit", label: "조회수", tdClass: "tdClass" },
+      ],
+    };
+  },
+  created() {
+    let param = {
+      pg: 1,
+      spp: 20,
+      key: null,
+      word: null,
+    };
+    listArticle(
+      param,
+      ({ data }) => {
+        this.articles = data;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  },
+  methods: {
+    moveWrite() {
+      this.$router.push({ name: "boardwrite" });
     },
-    created() {
-        this.pg = 1;
-        this.totalpg = 10;
-        this.spp = 20;
-        this.items = [...this.items, 
-            {
-                articleno : 1,
-                title : "sample",
-                userid : "김샘플",
-                hit : 0,
-                regtime : "0000-00-00",
-                content : "안녕하세요"
-            },
-            {
-                articleno : 2,
-                title : "sample2",
-                userid : "박샘플",
-                hit : 0,
-                regtime : "0000-00-00",
-                content : "하이"
-            }
-            
-        ]
+    viewArticle(article) {
+      this.$router.push({
+        name: "boardview",
+        params: { board_id: article.board_id},
+      });
     },
-    methods : {
-        moveleft() {},
-        moveright() {}
-    }
-}
+  },
+};
 </script>
 
-<style>
-
+<style scope>
+.tdClass {
+  width: 50px;
+  text-align: center;
+}
+.tdSubject {
+  width: 300px;
+  text-align: left;
+}
 </style>
