@@ -50,7 +50,7 @@
           <hr class="my-4" />
 
           <b-button variant="primary" @click="onClickModify" class="mr-1">정보수정</b-button>
-          <b-button variant="danger" href="#">회원탈퇴</b-button>
+          <b-button variant="danger" @click="onClickDelete">회원탈퇴</b-button>
         </b-jumbotron>
       </b-col>
       <b-col></b-col>
@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 const memberStore = "memberStore";
 
@@ -70,8 +70,15 @@ export default {
     ...mapState(memberStore, ["userInfo"]),
   },
   methods: {
+    ...mapActions(memberStore, ["remove"]),
     onClickModify() {
       this.$router.push({name: "modify"});
+    },
+    onClickDelete() {
+      console.log(this.userInfo.userId);
+      this.remove(this.userInfo.userId)
+      this.$swal("안녕히가세요.");
+      this.$router.push({name: "home"});
     }
   }
 };
