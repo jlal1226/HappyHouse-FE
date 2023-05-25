@@ -26,7 +26,7 @@ const dealStore= {
         },
         [Constant.REMOVE_DEALLIST] : (state) => {
             state.dealList = [];
-        }
+        },
     },
     actions :{
         async getRegionInfos({ commit }){

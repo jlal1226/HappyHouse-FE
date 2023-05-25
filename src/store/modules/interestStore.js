@@ -1,5 +1,6 @@
 import { insertInterest, deleteInterest, getInterests, getInterestStatList } from "@/api/interest"
 import Constant from "@/util/Constant.js"
+import router from "@/router" 
 
 const interestStore = {
     namespaced : true,
@@ -16,20 +17,20 @@ const interestStore = {
         },
     },
     actions: {
-        async insert({ dispatch }, payload) {
+        async insert({ dispatch, rootState }, payload) {
             await insertInterest(
                 payload,
                 ({ data }) => {
                     if (data === 1) alert("관심 목록에 추가했습니다.");
-                    else alert("관심 목록에 추가하지 못했습니다.");
                     dispatch(Constant.GET_INTERESTS, payload.userInfo)
                 },
-                (error) => {
-                    alert("관심 목록에 추가할 수 없습니다. error: " + error);
+                async () => {
+                    await dispatch("authenticate");
+                    if (rootState.memberStore.isValidToken) await dispatch("insert", payload);
                 }
             )
         },
-        async del({ dispatch }, payload){
+        async del({ dispatch, rootState }, payload){
             await deleteInterest(
                 payload,
                 ( { data }) => {
@@ -37,34 +38,49 @@ const interestStore = {
                     else alert("관심 목록에서 삭제하지 못했습니다.");
                     dispatch(Constant.GET_INTERESTS, payload.userInfo)
                 },
-                (error) => {
-                    alert("관심 목록에서 삭제할 수 없습니다. error: " + error);
+                async () => {
+                    await dispatch("authenticate");
+                    if (rootState.memberStore.isValidToken) await dispatch("del", payload);
                 }
             )
         },
-        async getStatList({ commit }, userInfo) {
+        async getStatList({ commit, dispatch, rootState}, userInfo) {
             await getInterestStatList(
                 userInfo,
                 ({ data }) => {
                     commit(Constant.GET_INTEREST_LIST, data);
                 },
-                (error) => {
-                    alert("관심 목록을 조회할 수 없습니다. error: " + error);
+                async () => {
+                    await dispatch("authenticate");
+                    if (rootState.memberStore.isValidToken) await dispatch("getStatList", userInfo);
                 }
             );
         },
-        async getInterestDTOList({ commit }, userInfo) {
+        async getInterestDTOList({ commit, dispatch, rootState }, userInfo) {
             await getInterests(
                 userInfo,
                 ({ data }) => {
                     commit(Constant.GET_INTERESTS, data);
                 },
-                (error) => {
-                    alert("error: " + error);
+                async () => {
+                    await dispatch("authenticate");
+                    if (rootState.memberStore.isValidToken) await dispatch("getInterestDTOList", userInfo);
                 }
             );
+        } ,
+        authenticate : async ({ dispatch, rootGetters }) => {
+            const checkUserInfo = rootGetters["memberStore/checkUserInfo"];
+            const checkToken = rootGetters["memberStore/checkToken"];
+            let token = sessionStorage.getItem("access-token");
+            if (checkUserInfo != null && token) {
+                await dispatch("memberStore/getUserInfo", token, {root : true});
+            }
+            if (!checkToken || checkUserInfo === null) {
+                router.push({ name: "login" });
+                alert("로그인이 필요한 서비스입니다.");
+            } 
         }
-    }
+    },
 }
 
 export default interestStore;

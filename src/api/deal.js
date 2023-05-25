@@ -1,6 +1,4 @@
-import { apiInstance } from "./index.js";
-
-const api = apiInstance();
+import api from "./index.js";
 
 async function getAllRegions(success, fail){
   await api.get("/deal/allregion").then(success).catch(fail);

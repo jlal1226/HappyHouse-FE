@@ -25,14 +25,20 @@ export default {
         ...mapState(dealStore, ["aptName", "aptCode"]),
     },
     watch: {
-        'aptCode' : 'init'
+        'aptCode' : 'init',
+        'modalOn' : 'toggle'
     },
     methods: {
-        ...mapActions(dealStore, ["getList"]),
+        ...mapActions(dealStore, ["getList", "setApartment"]),
         init() {
-            this.modalOn = true;
-            this.getList(this.aptCode);
+            if (this.aptCode) {
+                this.modalOn = true;
+                this.getList(this.aptCode);
+            }
         },
+        toggle(){
+            if (!this.modalOn) this.setApartment({aptCode : "", aptName : ""});
+        }
     }
 }
 </script>
